@@ -4,7 +4,7 @@
       <v-app>
         <v-row>
           <v-col>
-            +<ToDoList />
+            <ToDoList />
           </v-col>
           <v-divider class="mx-4"
           inset
