@@ -1,16 +1,12 @@
 <template>
-  <Dialog>
     <List :items="items" :on-click-item="onClickItem"/>
-  </Dialog>
 </template>
 
 <script>
-  import Dialog from "../components/Dialog";
-  import List from "../components/List";
+  import List from "./List";
 
   export default {
     components: {
-      Dialog,
       List,
     },
     data: () => ({
@@ -20,13 +16,11 @@
         {title: 'project3'},
       ],
     }),
-    created() {
-    },
     methods: {
       onClickItem(idx) {
         this.item = this.items[idx];
 
-      }
+      },
     }
   }
 </script>

@@ -3,11 +3,11 @@ import getters from './getters';
 import mutations from './mutations';
 
 const state = {
-  item: {
-    text: '',
+  todos: [],
+  todo: {
+    title: '',
     desc: '',
   },
-  items: [],
 };
 
 export default {

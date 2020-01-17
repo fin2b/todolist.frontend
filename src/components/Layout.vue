@@ -5,12 +5,15 @@
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer/>
     </v-app-bar>
-    <Dialog v-if="initDialog" @event-close="eventCloseDialog"/>
+    <Dialog v-if="initDialog" @on-close="onCloseDialog">
+      <ProjectList/>
+    </Dialog>
   </v-sheet>
 </template>
 
 <script>
   import Dialog from "./Dialog";
+  import ProjectList from "./ProjectList";
 
   export default {
     props: [
@@ -18,6 +21,7 @@
     ],
     components: {
       Dialog,
+      ProjectList,
     },
     data: () => ({
       initDialog: false,
@@ -26,7 +30,7 @@
       onOpenDialog() {
         this.initDialog = true;
       },
-      eventCloseDialog() {
+      onCloseDialog() {
         this.initDialog = false;
       }
     },

@@ -32,7 +32,7 @@
     watch: {
       dialog: {
         handler() {
-          this.$emit('event-close');
+          this.$emit('on-close');
         }
       }
     },
