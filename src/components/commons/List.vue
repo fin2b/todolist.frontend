@@ -4,7 +4,7 @@
       <v-list-item-icon>
         <v-icon v-text="i"/>
       </v-list-item-icon>
-      <v-list-item-content @click="onClickItem(i)">
+      <v-list-item-content @click="onClickItem(item)">
         <v-list-item-title v-text="item.title"/>
       </v-list-item-content>
     </v-list-item>

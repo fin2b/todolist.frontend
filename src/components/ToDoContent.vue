@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    {{ storedItem }}
+    {{ storedTodo }}
   </v-container>
 </template>
 
@@ -10,7 +10,7 @@
   export default {
     computed: {
       ...mapGetters({
-        storedItem: 'getItem'
+        storedTodo: 'getTodo'
       })
     },
     methods: {},
