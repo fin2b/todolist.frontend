@@ -1,21 +1,42 @@
 <template>
   <v-app>
-    <Layout title="Projects"/>
-    <router-view/>
+    <v-app>
+      <Layout :title="storedProjectTitle" @clicked="onOpenDialog"/>
+      <router-view :key="$route.fullPath"/>
+      <Dialog v-if="initDialog" @on-close="onCloseDialog">
+        <ProjectList/>
+      </Dialog>
+    </v-app>
   </v-app>
 </template>
 
 <script>
-  import Layout from './components/Layout';
+  import {mapGetters} from 'vuex';
+  import {Layout, Dialog} from './components/commons';
+  import ProjectList from "./components/ProjectList";
 
   export default {
     name: 'App',
     components: {
       Layout,
+      Dialog,
+      ProjectList,
+    },
+    computed: {
+      ...mapGetters({
+        storedProjectTitle: 'getProjectTitle',
+      })
     },
     data: () => ({
-      //
+      initDialog: false,
     }),
-    methods: {},
+    methods: {
+      onOpenDialog() {
+        this.initDialog = true;
+      },
+      onCloseDialog() {
+        this.initDialog = false;
+      },
+    },
   };
 </script>

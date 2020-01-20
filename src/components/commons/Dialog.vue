@@ -1,5 +1,7 @@
 <template>
   <v-dialog
+    persistent
+    scrollable
     v-model="dialog"
     max-width="400"
   >
@@ -18,7 +20,7 @@
           text
           @click="onClose"
         >
-          Cancel
+          Select
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -27,8 +29,6 @@
 
 <script>
   export default {
-    props: {
-    },
     watch: {
       dialog: {
         handler() {
@@ -42,7 +42,7 @@
     methods: {
       onClose() {
         this.dialog = false;
-      }
+      },
     }
   }
 </script>

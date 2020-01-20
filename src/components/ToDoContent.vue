@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    {{ storedTodo }}
+    {{ storedTodo.description }}
   </v-container>
 </template>
 

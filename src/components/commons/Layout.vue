@@ -5,34 +5,21 @@
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer/>
     </v-app-bar>
-    <Dialog v-if="initDialog" @on-close="onCloseDialog">
-      <ProjectList/>
-    </Dialog>
   </v-sheet>
 </template>
 
 <script>
-  import Dialog from "./Dialog";
-  import ProjectList from "./ProjectList";
-
   export default {
     props: [
       'title',
     ],
     components: {
-      Dialog,
-      ProjectList,
+
     },
-    data: () => ({
-      initDialog: false,
-    }),
     methods: {
       onOpenDialog() {
-        this.initDialog = true;
+        this.$emit('clicked');
       },
-      onCloseDialog() {
-        this.initDialog = false;
-      }
     },
   };
 </script>

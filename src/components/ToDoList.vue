@@ -1,29 +1,36 @@
 <template>
-  <List :items="items" :on-click-item="onClickItem"/>
+  <List :items="todos" :on-click-item="onClickItem"/>
 </template>
 
 <script>
-  import List from '../components/List';
+  import {mapGetters} from 'vuex';
+  import {Project} from "../model";
+  import {List} from './commons';
+
   export default {
+    props: [],
     components: {
       List,
     },
-    data: () => ({
-      items: [
-        {title: 'Real-Time', desc: 'hihihihihihihihi \n hihihihi111'},
-        {title: 'Audience', desc: 'hihihihihihihihi \n hihihihi222'},
-        {title: 'Conversions', desc: 'hihihihihihihihi \n hihihihi33'},
-      ],
-      item: {},
-      index: 0,
-    }),
-    created() {
-      this.$store.commit('setItems', this.items);
+    computed: {
+      ...mapGetters({
+        storedProject: 'getProject',
+        storedTodoList: 'getTodoList',
+      })
     },
+    created() {
+      this.todos = this.storedTodoList;
+      console.log('todos', this.todos);
+      this.$store.dispatch('asyncSetProject', Project.findById(this.$route.params.id - 1))
+        .then(() => this.$store.commit('setTodoList', this.storedProject.todos))
+        .then(() => this.todos = this.storedTodoList);
+    },
+    data: () => ({
+      todos: [],
+    }),
     methods: {
-      onClickItem(idx) {
-        this.item = this.items[idx];
-        this.$store.commit('setItem', this.item);
+      onClickItem(todo) {
+        this.$store.commit('setTodo', todo);
       },
     },
   };

@@ -5,8 +5,9 @@ import mutations from './mutations';
 const state = {
   todos: [],
   todo: {
+    id: '',
     title: '',
-    desc: '',
+    description: '',
   },
 };
 

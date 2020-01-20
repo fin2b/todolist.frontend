@@ -1,4 +1,5 @@
 export default {
-  getTodos: state => state.todos,
+  getTodoList: state => state.todos,
+  getTodoTitleList: state => state.todos.map(todo => todo.title),
   getTodo: state => state.todo,
 };

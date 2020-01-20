@@ -1,5 +1,5 @@
 export default {
-  setTodos(state, payload) {
+  setTodoList(state, payload) {
     state.todos = payload;
   },
   setTodo(state, payload) {

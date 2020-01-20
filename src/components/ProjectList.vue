@@ -1,25 +1,31 @@
 <template>
-    <List :items="items" :on-click-item="onClickItem"/>
+  <List :items="projects" :on-click-item="onClickItem"/>
 </template>
 
 <script>
-  import List from "./List";
+  import {List} from "./commons";
+  import {Project} from '../model';
 
   export default {
     components: {
       List,
     },
     data: () => ({
-      items: [
-        {title: 'project1'},
-        {title: 'project2'},
-        {title: 'project3'},
-      ],
+      projects: ''
     }),
+    created() {
+      this.projects = Project.findAll();
+      console.log(this.projects);
+      this.$store.commit('setProjects', this.projects);
+    },
     methods: {
-      onClickItem(idx) {
-        this.item = this.items[idx];
-
+      onClickItem(project) {
+        this.$router.push({name: 'home', params: {id: project.id}})
+        .catch(err => {
+          if (err.name === "NavigationDuplicated")
+            return {};
+          console.error(err);
+        })
       },
     }
   }

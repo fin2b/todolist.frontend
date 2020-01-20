@@ -3,62 +3,10 @@ import getters from './getters';
 import mutations from './mutations';
 
 const state = {
-  projects: [
-    {
-      title: '',
-      todo: [
-        {
-          title: '',
-          text: '',
-        },
-        {
-          title: '',
-          text: '',
-        },
-        {
-          title: '',
-          text: '',
-        },
-      ]
-    },
-    {
-      title: '',
-      todo: [
-        {
-          title: '',
-          text: '',
-        },
-        {
-          title: '',
-          text: '',
-        },
-        {
-          title: '',
-          text: '',
-        },
-      ]
-    },
-    {
-      title: '',
-      todo: [
-        {
-          title: '',
-          text: '',
-        },
-        {
-          title: '',
-          text: '',
-        },
-        {
-          title: '',
-          text: '',
-        },
-      ]
-    },
-  ],
+  projects: [],
   project: {
     title: '',
-    todo: [
+    todos: [
       {
         title: '',
         text: '',

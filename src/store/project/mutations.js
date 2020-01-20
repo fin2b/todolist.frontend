@@ -1,8 +1,8 @@
 export default {
   setProjects(state, payload) {
-    state.projects = payload;
+    return state.projects = payload;
   },
   setProject(state, payload) {
-    state.project = payload;
+    return state.project = payload;
   }
 }
