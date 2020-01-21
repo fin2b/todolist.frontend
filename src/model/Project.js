@@ -13,4 +13,5 @@ export default class Project {
   static findById(id) {
     return projectData.projects[id];
   }
+
 }

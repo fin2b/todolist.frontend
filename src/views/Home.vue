@@ -8,6 +8,7 @@
                  vertical/>
       <v-col :cols="8">
         <to-do-content/>
+        <v-divider></v-divider>
       </v-col>
     </v-row>
   </v-app>

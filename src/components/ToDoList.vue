@@ -6,9 +6,9 @@
   import {mapGetters} from 'vuex';
   import {Project} from "../model";
   import {List} from './commons';
+  import pageType from '../util/pageType';
 
   export default {
-    props: [],
     components: {
       List,
     },
@@ -16,7 +16,8 @@
       ...mapGetters({
         storedProject: 'getProject',
         storedTodoList: 'getTodoList',
-      })
+        storedTodoCurrentType: 'getTodoCurrentType',
+      }),
     },
     created() {
       this.todos = this.storedTodoList;
@@ -27,9 +28,13 @@
     },
     data: () => ({
       todos: [],
+      pageType
     }),
     methods: {
       onClickItem(todo) {
+        if (this.storedTodoCurrentType !== pageType.RETRIEVE) {
+          this.$store.commit('setTodoCurrentType', pageType.RETRIEVE);
+        }
         this.$store.commit('setTodo', todo);
       },
     },

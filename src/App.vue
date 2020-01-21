@@ -3,7 +3,7 @@
     <v-app>
       <Layout :title="storedProjectTitle" @clicked="onOpenDialog"/>
       <router-view :key="$route.fullPath"/>
-      <Dialog v-if="initDialog" @on-close="onCloseDialog">
+      <Dialog v-if="initDialog" @on-close="onCloseDialog" :title="title">
         <ProjectList/>
       </Dialog>
     </v-app>
@@ -29,7 +29,11 @@
     },
     data: () => ({
       initDialog: false,
+      title: "Move to Other Projects"
     }),
+    created() {
+      if (!this.storedProjectTitle) this.initDialog = true;
+    },
     methods: {
       onOpenDialog() {
         this.initDialog = true;

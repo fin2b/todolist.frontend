@@ -3,6 +3,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   import {List} from "./commons";
   import {Project} from '../model';
 
@@ -11,11 +12,10 @@
       List,
     },
     data: () => ({
-      projects: ''
+      projects: '',
     }),
     created() {
       this.projects = Project.findAll();
-      console.log(this.projects);
       this.$store.commit('setProjects', this.projects);
     },
     methods: {

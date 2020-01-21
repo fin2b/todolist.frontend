@@ -6,7 +6,7 @@
     max-width="400"
   >
     <v-card>
-      <v-card-title class="headline">Move to Other Projects</v-card-title>
+      <v-card-title class="headline">{{title}}</v-card-title>
 
       <v-card-text>
         <slot />
@@ -14,13 +14,12 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-
         <v-btn
           color="green darken-1"
           text
           @click="onClose"
         >
-          Select
+          {{btnName}}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -29,6 +28,11 @@
 
 <script>
   export default {
+    props: [
+      'title',
+      'btnName',
+      'options'
+    ],
     watch: {
       dialog: {
         handler() {
@@ -36,8 +40,19 @@
         }
       }
     },
+    created() {
+      this.default = {
+        isShowConfirm: this.options.isShowConfirm || this.default.isShowConfirm,
+
+      }
+    },
     data: () => ({
       dialog: true,
+      default: {
+        isShowConfirm: false,
+        isShowCancel: false,
+        isShowClose: true,
+      }
     }),
     methods: {
       onClose() {

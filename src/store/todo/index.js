@@ -1,6 +1,7 @@
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
+import type from '../../util/pageType';
 
 const state = {
   todos: [],
@@ -9,6 +10,7 @@ const state = {
     title: '',
     description: '',
   },
+  currentType: type.RETRIEVE
 };
 
 export default {
