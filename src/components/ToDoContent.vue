@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12" sm="11">
-        <div v-if="storedTodoCurrentType === pageType.RETRIEVE">
+        <div v-if="storedTodoCurrentType === pageType.RETRIEVE || storedTodoCurrentType === pageType.DELETE">
           <div class="description">
             {{storedTodo.description}}
           </div>
@@ -19,31 +19,55 @@
       <v-col cols="12" sm="1">
         <MenuBtn :item="storedTodo" :elems="pageType" :onClick="onClick"/>
       </v-col>
+      <Dialog v-if="storedTodoCurrentType === pageType.DELETE" :options="deleteOptions">
+        삭제하시겠습니까?
+      </Dialog>
+      <Dialog v-if="confirmed" :options="confirmOptions">
+        삭제되었습니다.
+      </Dialog>
     </v-row>
   </v-container>
 </template>
 
 <script>
   import {mapGetters} from "vuex";
-  import {MenuBtn} from "./commons";
+  import {Dialog, MenuBtn} from "./commons";
   import pageType from '../util/pageType';
   import {mdiFileEditOutline} from '@mdi/js';
 
   export default {
     components: {
+      Dialog,
       MenuBtn,
     },
     computed: {
       ...mapGetters({
         storedTodo: 'getTodo',
         storedTodoCurrentType: 'getTodoCurrentType',
-      })
+      }),
+    },
+    created() {
+      this.deleteOptions.onCancel = this.onDeleteCancel;
+      this.deleteOptions.onConfirm = this.onDeleteConfirm;
+      this.confirmOptions.onClose = this.onConfirmClose;
     },
     data: () => ({
       pageType,
       icons: {
         mdiFileEditOutline,
       },
+      initDialog: false,
+      deleteOptions: {
+        isShowConfirm: true,
+        isShowCancel: true,
+        onConfirm: Function,
+        onCancel: Function,
+      },
+      confirmed: false,
+      confirmOptions: {
+        isShowClose: true,
+        onClose: Function,
+      }
     }),
     methods: {
       onClick(el) {
@@ -54,7 +78,20 @@
       },
       onSubmit(e) {
         console.log('description', this.description);
-
+        this.$store.commit('setTodoCurrentType', pageType.RETRIEVE);
+      },
+      onDeleteCancel() {
+        console.log('cancel');
+        this.$store.commit('setTodoCurrentType', pageType.RETRIEVE);
+      },
+      onDeleteConfirm() {
+        console.log('confirm');
+        this.confirmed = true;
+      },
+      onConfirmClose() {
+        console.log('confirm dialog close');
+        this.$store.commit('setTodoCurrentType', pageType.RETRIEVE);
+        this.confirmed = false;
       }
     },
   }

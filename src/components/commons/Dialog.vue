@@ -14,12 +14,33 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn
+        <v-btn v-if="defaultOptions.isShowClose"
           color="green darken-1"
           text
           @click="onClose"
         >
-          {{btnName}}
+          close
+        </v-btn>
+        <v-btn v-if="defaultOptions.isShowSelect"
+               color="green darken-1"
+               text
+               @click="onSelect"
+        >
+          select
+        </v-btn>
+        <v-btn v-if="defaultOptions.isShowCancel"
+               color="green darken-1"
+               text
+               @click="onCancel"
+        >
+          cancel
+        </v-btn>
+        <v-btn v-if="defaultOptions.isShowConfirm"
+               color="green darken-1"
+               text
+               @click="onConfirm"
+        >
+          confirm
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -41,23 +62,42 @@
       }
     },
     created() {
-      this.default = {
-        isShowConfirm: this.options.isShowConfirm || this.default.isShowConfirm,
-
+      this.defaultOptions = {
+        isShowConfirm: this.options.isShowConfirm || this.defaultOptions.isShowConfirm,
+        isShowSelect: this.options.isShowSelect || this.defaultOptions.isShowSelect,
+        isShowCancel: this.options.isShowCancel || this.defaultOptions.isShowCancel,
+        isShowClose: this.options.isShowClose || this.defaultOptions.isShowClose,
       }
     },
     data: () => ({
       dialog: true,
-      default: {
+      defaultOptions: {
         isShowConfirm: false,
+        isShowSelect: false,
         isShowCancel: false,
-        isShowClose: true,
+        isShowClose: false,
       }
     }),
     methods: {
       onClose() {
+        if (this.options.onClose) this.options.onClose();
         this.dialog = false;
       },
+      onSelect() {
+        if (!this.options.onSelect) return;
+        this.options.onSelect();
+        this.dialog = false;
+      },
+      onCancel() {
+        if (!this.options.onCancel) return;
+        this.options.onCancel();
+        this.dialog = false;
+      },
+      onConfirm() {
+        if (!this.options.onConfirm) return;
+        this.options.onConfirm();
+        this.dialog = false;
+      }
     }
   }
 </script>

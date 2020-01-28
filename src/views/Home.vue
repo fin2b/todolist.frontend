@@ -17,6 +17,7 @@
 <script>
   import ToDoContent from '../components/ToDoContent';
   import ToDoList from '../components/ToDoList';
+  import ToDoComment from '../components/ToDoComment';
 
   export default {
     name: 'Home',

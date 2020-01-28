@@ -3,7 +3,6 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
   import {List} from "./commons";
   import {Project} from '../model';
 
