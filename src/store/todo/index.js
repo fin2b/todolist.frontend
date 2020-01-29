@@ -9,6 +9,7 @@ const state = {
     id: '',
     title: '',
     description: '',
+    comments: [],
   },
   currentType: type.RETRIEVE
 };

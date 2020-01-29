@@ -37,6 +37,6 @@
         }
         this.$store.commit('setTodo', todo);
       },
-    },
-  };
+    }
+  }
 </script>

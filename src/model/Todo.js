@@ -1,10 +1,11 @@
 import todoData from './projects';
 
 export default class Todo {
-  constructor(id, title, description) {
+  constructor(id, title, description, comments) {
     this.id = id;
     this.title = title;
     this.description = description;
+    this.comments = comments
   }
 
   static findAllByProjectId(projectId) {

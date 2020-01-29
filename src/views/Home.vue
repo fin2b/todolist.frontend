@@ -2,28 +2,30 @@
   <v-app>
     <v-row>
       <v-col>
-        <to-do-list/>
+        <todo-list/>
       </v-col>
       <v-divider inset
                  vertical/>
       <v-col :cols="8">
-        <to-do-content/>
+        <todo-content/>
         <v-divider></v-divider>
+        <todo-comment></todo-comment>
       </v-col>
     </v-row>
   </v-app>
 </template>
 
 <script>
-  import ToDoContent from '../components/ToDoContent';
-  import ToDoList from '../components/ToDoList';
-  import ToDoComment from '../components/ToDoComment';
+  import TodoContent from '../components/TodoContent';
+  import TodoList from '../components/TodoList';
+  import TodoComment from '../components/TodoComment';
 
   export default {
     name: 'Home',
     components: {
-      ToDoList,
-      ToDoContent,
+      TodoContent,
+      TodoList,
+      TodoComment
     },
   };
 </script>
