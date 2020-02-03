@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div :key="idx" v-for="(comment, idx) in storedTodo.comments" class="comment-user">
+  <div v-if="comments">
+    <div :key="idx" v-for="(comment, idx) in comments" class="comment-user">
       <img class="comment-user-img" :src="profileImg" alt="">
       <div class="comment-user-content">
         <div>{{comment.username}}</div>
@@ -20,8 +20,12 @@
         storedTodo: 'getTodo',
       }),
     },
+    created() {
+      this.comments = this.storedTodo.comments ? this.storedTodo.comments : '';
+    },
     data: () => ({
       profileImg,
+      comments: '',
     }),
     methods: {}
   }

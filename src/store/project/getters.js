@@ -1,6 +1,6 @@
 export default {
-  getProjects: state => state.projects,
-  getProject: state => state.project,
-  getProjectTitle: state => state.project.title,
+  getProjects: state => state.project,
+  getProject: (state) => (idx) => state.project[idx],
+  getProjectTitle: (state) => (idx) => state.project[idx].title,
   getProjectCurrentType: state => state.currentType,
 };

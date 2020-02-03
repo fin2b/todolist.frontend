@@ -1,12 +1,10 @@
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
-import type from '../../util/pageType';
 
 const state = {
-  projects: [],
-  project: {},
-  currentType: type.RETRIEVE,
+  project: [],
+  currentType: '조회하기',
 };
 
 export default {

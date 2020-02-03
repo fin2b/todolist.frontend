@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-row>
+    <v-row class="row">
       <v-col>
         <todo-list/>
       </v-col>
@@ -29,3 +29,9 @@
     },
   };
 </script>
+
+<style lang="scss">
+  .row {
+    width: 100%;
+  }
+</style>

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app>
-      <Layout :title="storedProjectTitle" @clicked="onOpenDialog"/>
+      <Layout :title="storedProjects" @clicked="onOpenDialog"/>
       <router-view :key="$route.fullPath"/>
       <Dialog v-if="initDialog" @on-close="onCloseDialog" :title="title" :options="dialogOptions">
         <ProjectList/>
@@ -25,6 +25,7 @@
     computed: {
       ...mapGetters({
         storedProjectTitle: 'getProjectTitle',
+        storedProjects: 'getProjects',
       })
     },
     data: () => ({
@@ -36,7 +37,7 @@
       }
     }),
     created() {
-      if (!this.storedProjectTitle) this.initDialog = true;
+      if (!this.storedProjects) this.initDialog = true;
       this.dialogOptions.onSelect = this.onSelect;
     },
     methods: {
@@ -44,11 +45,9 @@
         this.initDialog = true;
       },
       onCloseDialog() {
-        console.log('onclosedialog');
         this.initDialog = false;
       },
       onSelect() {
-        console.log('select');
         this.onCloseDialog();
       }
     },

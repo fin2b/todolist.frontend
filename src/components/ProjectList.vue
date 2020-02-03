@@ -1,10 +1,9 @@
 <template>
-  <List :items="projects" :on-click-item="onClickItem"/>
+  <List :items="projects" :on-click-item="onClickItem" />
 </template>
 
 <script>
   import {List} from "./commons";
-  import {Project} from '../model';
 
   export default {
     components: {
@@ -14,8 +13,8 @@
       projects: '',
     }),
     created() {
-      this.projects = Project.findAll();
-      this.$store.commit('setProjects', this.projects);
+      this.projects = this.$store.dispatch('asyncFindAllProject');
+      console.log(this.projects);
     },
     methods: {
       onClickItem(project) {

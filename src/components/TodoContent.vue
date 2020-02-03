@@ -12,8 +12,13 @@
             <v-icon class="edit-icon">{{icons.mdiFileEditOutline}}</v-icon>
             editing...
           </div>
-          <textarea type="text" id="description" class="edit-description" :value="storedTodo.description" @input="onInput" rows="15"/>
-          <v-btn type="submit" class="submit-btn" color="primary" @click.prevent="onSubmit">submit</v-btn>
+          <textarea type="text" id="description" class="edit-description" :value="storedTodo.description"
+                    @input="onInput" rows="15"/>
+          <v-btn type="submit" class="edit-btn" color="primary" @click.prevent="onSubmit">수정</v-btn>
+        </div>
+        <div v-else-if="storedTodoCurrentType === pageType.CREATE">
+          <textarea id="create-description" class="create-description" cols="30" rows="15"/>
+          <v-btn color="primary" @click="onClickCreate">할 일 등록</v-btn>
         </div>
       </v-col>
       <v-col cols="12" sm="1">
@@ -32,7 +37,6 @@
 <script>
   import {mapGetters} from "vuex";
   import {Dialog, MenuBtn} from "./commons";
-  import pageType from '../util/pageType';
   import {mdiFileEditOutline} from '@mdi/js';
 
   export default {
@@ -44,6 +48,7 @@
       ...mapGetters({
         storedTodo: 'getTodo',
         storedTodoCurrentType: 'getTodoCurrentType',
+        storedTodoTitle: 'getTodoTitle',
       }),
     },
     created() {
@@ -52,7 +57,12 @@
       this.confirmOptions.onClose = this.onConfirmClose;
     },
     data: () => ({
-      pageType,
+      pageType: {
+        RETRIEVE: '조회하기',
+        UPDATE: '수정하기',
+        DELETE: '삭제하기',
+        CREATE: '새로 만들기',
+      },
       icons: {
         mdiFileEditOutline,
       },
@@ -78,11 +88,11 @@
       },
       onSubmit(e) {
         console.log('description', this.description);
-        this.$store.commit('setTodoCurrentType', pageType.RETRIEVE);
+        this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
       },
       onDeleteCancel() {
         console.log('cancel');
-        this.$store.commit('setTodoCurrentType', pageType.RETRIEVE);
+        this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
       },
       onDeleteConfirm() {
         console.log('confirm');
@@ -90,8 +100,14 @@
       },
       onConfirmClose() {
         console.log('confirm dialog close');
-        this.$store.commit('setTodoCurrentType', pageType.RETRIEVE);
+        this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
         this.confirmed = false;
+      },
+      onClickCreate() {
+        console.log('create');
+        this.$store.dispatch('asyncSetTodo',
+          {title: this.storedTodoTitle, description: this.description});
+        this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
       }
     },
   }
@@ -111,7 +127,7 @@
     margin: 10px;
   }
 
-  .submit-btn {
-    margin-right: auto;
+  .create-description {
+    width: 100%;
   }
 </style>
