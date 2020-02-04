@@ -1,17 +1,17 @@
 export default {
   setTodoList(state, payload) {
-    state.todos = payload;
-  },
-  setTodo(state, payload) {
     state.todo = payload;
+  },
+  setTodo(state, idx, payload) {
+    state.todo[idx] = payload;
   },
   setTodoCurrentType(state, payload) {
     state.currentType = payload;
   },
-  setTodoTitle(state, payload) {
-    state.todo.title = payload;
+  setTodoTitle(state, idx, payload) {
+    state.todo[idx].title = payload;
   },
-  setTodoDescription(state, payload) {
-    state.todo.description = payload;
+  setTodoDescription(state, idx, payload) {
+    state.todo[idx].description = payload;
   }
 };

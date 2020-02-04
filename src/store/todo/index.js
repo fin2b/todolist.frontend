@@ -4,7 +4,7 @@ import mutations from './mutations';
 
 const state = {
   todo: [],
-  currentType: 'RETRIEVE'
+  currentType: '조회하기'
 };
 
 export default {

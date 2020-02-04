@@ -1,10 +1,10 @@
 <template>
   <v-app>
     <v-app>
-      <Layout :title="storedProjects" @clicked="onOpenDialog"/>
+      <Layout v-if="storedProjects" :title="storedProjects[0].title" @clicked="onOpenDialog"/>
       <router-view :key="$route.fullPath"/>
       <Dialog v-if="initDialog" @on-close="onCloseDialog" :title="title" :options="dialogOptions">
-        <ProjectList/>
+        <ProjectList :projects="storedProjects"/>
       </Dialog>
     </v-app>
   </v-app>
@@ -34,11 +34,12 @@
       dialogOptions: {
         isShowSelect: true,
         onSelect: Function
-      }
+      },
     }),
     created() {
       if (!this.storedProjects) this.initDialog = true;
       this.dialogOptions.onSelect = this.onSelect;
+      this.$store.dispatch('asyncFindAllProject')
     },
     methods: {
       onOpenDialog() {
@@ -49,7 +50,7 @@
       },
       onSelect() {
         this.onCloseDialog();
-      }
+      },
     },
   };
 </script>

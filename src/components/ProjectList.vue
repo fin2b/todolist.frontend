@@ -9,11 +9,12 @@
     components: {
       List,
     },
+    props: [
+      'projects',
+    ],
     data: () => ({
-      projects: '',
     }),
     created() {
-      this.projects = this.$store.dispatch('asyncFindAllProject');
       console.log(this.projects);
     },
     methods: {
