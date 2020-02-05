@@ -1,8 +1,31 @@
 <template>
-  <List :items="projects" :on-click-item="onClickItem" />
+  <div class="project">
+    <List :items="projects" :on-click-item="onClickItem"/>
+    <div class="project-list-create" v-if="storedProjectCurrentType === pageType.CREATE">
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon v-text="storedProjects.length + 1"/>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <div class="project-list-create-content">
+            <v-text-field
+              v-model="title"
+              dense
+              label="project title"
+              class="project-list-create-content-field" />
+            <v-btn icon color="green" @click="onClickSubmit">
+              <v-icon>{{ icons.mdiCheckCircleOutline }}</v-icon>
+            </v-btn>
+          </div>
+        </v-list-item-content>
+      </v-list-item>
+    </div>
+  </div>
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
+  import { mdiCheckCircleOutline } from '@mdi/js';
   import {List} from "./commons";
 
   export default {
@@ -12,7 +35,22 @@
     props: [
       'projects',
     ],
+    computed: {
+      ...mapGetters({
+        storedCurrentProject: 'getCurrentProject',
+        storedProjects: 'getProjects',
+        storedProjectCurrentType: 'getProjectCurrentType',
+      })
+    },
     data: () => ({
+      pageType: {
+        RETRIEVE: '조회하기',
+        CREATE: '새로 만들기'
+      },
+      title: '',
+      icons: {
+        mdiCheckCircleOutline,
+      }
     }),
     created() {
       console.log(this.projects);
@@ -20,12 +58,32 @@
     methods: {
       onClickItem(project) {
         this.$router.push({name: 'home', params: {id: project.id}})
-        .catch(err => {
-          if (err.name === "NavigationDuplicated")
-            return {};
-          console.error(err);
-        })
+          .then(() => {
+            this.$store.commit('setCurrentProject', project);
+            console.log('getCurrentProject', this.getCurrentProject);
+          })
+          .catch(err => {
+            if (err.name === "NavigationDuplicated")
+              return {};
+            console.error(err);
+          })
+      },
+      onClickSubmit() {
+        this.$store.dispatch('asyncSetProject', {title: this.title})
       },
     }
   }
 </script>
+
+<style lang="scss">
+  .project {
+    &-list-create-content {
+      display: flex;
+      width: 70%;
+
+      &-field {
+        margin-right: 10px;
+      }
+    }
+  }
+</style>

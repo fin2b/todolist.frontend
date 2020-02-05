@@ -32,7 +32,7 @@ export default {
       .catch(err => console.error(err));
   },
   asyncRemoveProject(context, payload) {
-    return http.delete(`/project/${payload.id}`)
+    return http.delete(`/project`, payload)
       .then(response => console.log(response))
       .catch(err => console.error(err));
   },

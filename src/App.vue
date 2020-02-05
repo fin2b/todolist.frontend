@@ -1,9 +1,12 @@
 <template>
   <v-app>
     <v-app>
-      <Layout v-if="storedProjects" :title="storedProjects[0].title" @clicked="onOpenDialog"/>
+      <Layout v-if="storedProjects" :title="storedCurrentProjectTitle" @clicked="onOpenDialog"/>
       <router-view :key="$route.fullPath"/>
-      <Dialog v-if="initDialog" @on-close="onCloseDialog" :title="title" :options="dialogOptions">
+      <Dialog v-if="initDialog" @on-close="onCloseDialog" :title="title" :btn="btn" :onClickBtn="onClickBtn">
+        <ProjectList :projects="storedProjects"/>
+      </Dialog>
+      <Dialog v-if="storedProjectCurrentType === this.pageType.CREATE" @on-close="onCloseDialog" :title="title" :btn="btnWhenCreate" :onClickBtn="onClickBtnWhenCreate">
         <ProjectList :projects="storedProjects"/>
       </Dialog>
     </v-app>
@@ -24,22 +27,28 @@
     },
     computed: {
       ...mapGetters({
-        storedProjectTitle: 'getProjectTitle',
         storedProjects: 'getProjects',
+        storedCurrentProjectTitle: 'getCurrentProjectTitle',
+        storedProjectCurrentType: 'getProjectCurrentType',
       })
     },
     data: () => ({
       initDialog: false,
       title: "Move to Other Projects",
-      dialogOptions: {
-        isShowSelect: true,
-        onSelect: Function
+      pageType: {
+        CREATE: '새로 만들기',
+        RETRIEVE: '조회하기',
       },
+      btn: ['select', 'create'],
+      onClickBtn: [],
+      btnWhenCreate: ['cancel'],
+      onClickBtnWhenCreate: [],
     }),
     created() {
-      if (!this.storedProjects) this.initDialog = true;
-      this.dialogOptions.onSelect = this.onSelect;
-      this.$store.dispatch('asyncFindAllProject')
+      if (!this.storedCurrentProjectTitle) this.initDialog = true;
+      this.onClickBtn.push(this.onSelect, this.onCreate);
+      this.onClickBtnWhenCreate.push(this.onCancel);
+      this.$store.dispatch('asyncFindAllProject');
     },
     methods: {
       onOpenDialog() {
@@ -49,8 +58,21 @@
         this.initDialog = false;
       },
       onSelect() {
+        console.log('onselect');
         this.onCloseDialog();
       },
+      onCreate() {
+        if (this.pageType.RETRIEVE) {
+          console.log('oncreate');
+          return this.$store.commit('setProjectCurrentType', this.pageType.CREATE);
+        }
+      },
+      onCancel() {
+        if (this.pageType.CREATE) {
+          console.log('oncancel');
+          return this.$store.commit('setProjectCurrentType', this.pageType.RETRIEVE);
+        }
+      }
     },
   };
 </script>
