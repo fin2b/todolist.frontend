@@ -52,16 +52,10 @@
         mdiCheckCircleOutline,
       }
     }),
-    created() {
-      console.log(this.projects);
-    },
     methods: {
       onClickItem(project) {
         this.$router.push({name: 'home', params: {id: project.id}})
-          .then(() => {
-            this.$store.commit('setCurrentProject', project);
-            console.log('getCurrentProject', this.getCurrentProject);
-          })
+          .then(() => this.$store.commit('setCurrentProject', project))
           .catch(err => {
             if (err.name === "NavigationDuplicated")
               return {};

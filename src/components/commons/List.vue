@@ -38,9 +38,6 @@
         console.log(this.selected);
       }
     },
-    created() {
-      console.log('created', this.checkbox)
-    },
     data: () => ({
       item: '',
       selected: [],
