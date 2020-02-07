@@ -1,15 +1,14 @@
 <template>
   <v-app>
-    <v-app>
-      <Layout v-if="storedProjects" :title="storedCurrentProjectTitle" @clicked="onOpenDialog"/>
-      <router-view :key="$route.fullPath"/>
-      <Dialog v-if="initDialog" @on-close="onCloseDialog" :title="title" :btn="btn" :onClickBtn="onClickBtn">
-        <ProjectList :projects="storedProjects"/>
-      </Dialog>
-      <Dialog v-if="storedProjectCurrentType === this.pageType.CREATE" @on-close="onCloseDialog" :title="title" :btn="btnWhenCreate" :onClickBtn="onClickBtnWhenCreate">
-        <ProjectList :projects="storedProjects"/>
-      </Dialog>
-    </v-app>
+    <Layout v-if="storedProjects" :title="storedCurrentProjectTitle" @clicked="onOpenDialog"/>
+    <router-view :key="$route.fullPath"/>
+    <Dialog v-if="initDialog" @on-close="onCloseDialog" :title="title" :btn="btn" :onClickBtn="onClickBtn">
+      <ProjectList :projects="storedProjects" @onClickSelect="onCheckIsSelected"/>
+    </Dialog>
+    <Dialog v-if="storedProjectCurrentType === this.pageType.CREATE" @on-close="onCloseDialog" :title="title"
+            :btn="btnWhenCreate" :onClickBtn="onClickBtnWhenCreate">
+      <ProjectList :projects="storedProjects"/>
+    </Dialog>
   </v-app>
 </template>
 
@@ -43,10 +42,11 @@
       onClickBtn: [],
       btnWhenCreate: ['cancel'],
       onClickBtnWhenCreate: [],
+      selectedProject: {},
     }),
     created() {
       if (!this.storedCurrentProjectTitle) this.initDialog = true;
-      this.onClickBtn.push(this.onSelect, this.onCreate);
+      this.onClickBtn.push(this.onSelectProject, this.onCreate);
       this.onClickBtnWhenCreate.push(this.onCancel);
       this.$store.dispatch('asyncFindAllProject');
     },
@@ -57,9 +57,22 @@
       onCloseDialog() {
         this.initDialog = false;
       },
-      onSelect() {
+      onCheckIsSelected(project) {
+        console.log('before check isSelected');
+        console.log(project);
+        this.selectedProject = project;
+      },
+      onSelectProject() {
         console.log('onselect');
-        this.onCloseDialog();
+        console.log(this.selectedProject);
+        this.$router.push({name: 'home', params: {id: this.selectedProject.id}})
+          .then(() => this.$store.commit('setCurrentProject', this.selectedProject))
+          .then(() => this.onCloseDialog)
+          .catch(err => {
+            if (err.name === "NavigationDuplicated")
+              return {};
+            console.error(err);
+          })
       },
       onCreate() {
         if (this.pageType.RETRIEVE) {

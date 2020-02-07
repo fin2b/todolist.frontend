@@ -1,6 +1,6 @@
 <template>
   <div class="project">
-    <List :items="projects" :on-click-item="onClickItem"/>
+    <List :items="projects" @onClickItem="onClickSelect"/>
     <div class="project-list-create" v-if="storedProjectCurrentType === pageType.CREATE">
       <v-list-item>
         <v-list-item-icon>
@@ -50,17 +50,12 @@
       title: '',
       icons: {
         mdiCheckCircleOutline,
-      }
+      },
     }),
     methods: {
-      onClickItem(project) {
-        this.$router.push({name: 'home', params: {id: project.id}})
-          .then(() => this.$store.commit('setCurrentProject', project))
-          .catch(err => {
-            if (err.name === "NavigationDuplicated")
-              return {};
-            console.error(err);
-          })
+      onClickSelect(project) {
+        console.log('projectlist', project);
+        this.$emit('onClickSelect', project);
       },
       onClickSubmit() {
         this.$store.dispatch('asyncSetProject', {title: this.title})
