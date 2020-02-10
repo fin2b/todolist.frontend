@@ -4,6 +4,7 @@ import mutations from './mutations';
 
 const state = {
   project: [],
+  selectedProject: {},
   currentProject: {},
   currentType: '조회하기',
 };

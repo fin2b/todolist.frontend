@@ -2,6 +2,9 @@ export default {
   setProjects(state, payload) {
     return state.project = payload;
   },
+  setSelectedProject(state, payload) {
+    return state.selectedProject = payload;
+  },
   setProject(state, idx, payload) {
     return state.project[idx] = payload;
   },

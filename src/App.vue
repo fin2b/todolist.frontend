@@ -2,10 +2,10 @@
   <v-app>
     <Layout v-if="storedProjects" :title="storedCurrentProjectTitle" @clicked="onOpenDialog"/>
     <router-view :key="$route.fullPath"/>
-    <Dialog v-if="initDialog" @on-close="onCloseDialog" :title="title" :btn="btn" :onClickBtn="onClickBtn">
-      <ProjectList :projects="storedProjects" @onClickSelect="onCheckIsSelected"/>
+    <Dialog v-if="initDialog" @on-close="!!!initDialog" :title="title" :btn="btn" :onClickBtn="onClickBtn">
+      <ProjectList :projects="storedProjects" />
     </Dialog>
-    <Dialog v-if="storedProjectCurrentType === this.pageType.CREATE" @on-close="onCloseDialog" :title="title"
+    <Dialog v-if="storedProjectCurrentType === this.pageType.CREATE" @on-close="!!!initDialog" :title="title"
             :btn="btnWhenCreate" :onClickBtn="onClickBtnWhenCreate">
       <ProjectList :projects="storedProjects"/>
     </Dialog>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
+  import {mapGetters, mapMutations} from 'vuex';
   import {Layout, Dialog} from './components/commons';
   import ProjectList from "./components/ProjectList";
 
@@ -27,9 +27,10 @@
     computed: {
       ...mapGetters({
         storedProjects: 'getProjects',
+        storedSelectedProject: 'getSelectedProject',
         storedCurrentProjectTitle: 'getCurrentProjectTitle',
         storedProjectCurrentType: 'getProjectCurrentType',
-      })
+      }),
     },
     data: () => ({
       initDialog: false,
@@ -42,7 +43,6 @@
       onClickBtn: [],
       btnWhenCreate: ['cancel'],
       onClickBtnWhenCreate: [],
-      selectedProject: {},
     }),
     created() {
       if (!this.storedCurrentProjectTitle) this.initDialog = true;
@@ -54,20 +54,10 @@
       onOpenDialog() {
         this.initDialog = true;
       },
-      onCloseDialog() {
-        this.initDialog = false;
-      },
-      onCheckIsSelected(project) {
-        console.log('before check isSelected');
-        console.log(project);
-        this.selectedProject = project;
-      },
       onSelectProject() {
-        console.log('onselect');
-        console.log(this.selectedProject);
-        this.$router.push({name: 'home', params: {id: this.selectedProject.id}})
-          .then(() => this.$store.commit('setCurrentProject', this.selectedProject))
-          .then(() => this.onCloseDialog)
+        this.$router.push({name: 'home', params: {id: this.storedSelectedProject.id}})
+          .then(() => this.$store.commit('setCurrentProject', this.storedSelectedProject))
+          .then(() => this.initDialog = false)
           .catch(err => {
             if (err.name === "NavigationDuplicated")
               return {};
@@ -76,13 +66,11 @@
       },
       onCreate() {
         if (this.pageType.RETRIEVE) {
-          console.log('oncreate');
           return this.$store.commit('setProjectCurrentType', this.pageType.CREATE);
         }
       },
       onCancel() {
         if (this.pageType.CREATE) {
-          console.log('oncancel');
           return this.$store.commit('setProjectCurrentType', this.pageType.RETRIEVE);
         }
       }

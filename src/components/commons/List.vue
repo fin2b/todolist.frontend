@@ -30,7 +30,7 @@
   export default {
     props: {
       'items': Array,
-      // 'onClick': Function,
+      'onClickItem': Function,
       'checkbox': Boolean,
     },
     watch: {
@@ -42,11 +42,5 @@
       item: '',
       selected: [],
     }),
-    methods: {
-      onClickItem(item) {
-        console.log(item);
-        this.$emit('onClickItem', item);
-      }
-    }
   }
 </script>

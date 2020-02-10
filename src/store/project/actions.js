@@ -10,9 +10,10 @@ export default {
       }).catch(err => console.error(err));
   },
   asyncFindOneProject(context, payload) {
-    return http.get(`/project`, { params: payload })
+    return http.get(`/project/${payload}`, )
       .then(response => response.data)
       .then(response => {
+        console.log('asyncFindOneProject', response);
         context.commit('setProject', response);
         return response;
       }).catch(err => console.error(err));

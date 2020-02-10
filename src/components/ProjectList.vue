@@ -1,6 +1,6 @@
 <template>
   <div class="project">
-    <List :items="projects" @onClickItem="onClickSelect"/>
+    <List :items="projects" :onClickItem="onClickItem"/>
     <div class="project-list-create" v-if="storedProjectCurrentType === pageType.CREATE">
       <v-list-item>
         <v-list-item-icon>
@@ -40,7 +40,7 @@
         storedCurrentProject: 'getCurrentProject',
         storedProjects: 'getProjects',
         storedProjectCurrentType: 'getProjectCurrentType',
-      })
+      }),
     },
     data: () => ({
       pageType: {
@@ -50,15 +50,18 @@
       title: '',
       icons: {
         mdiCheckCircleOutline,
-      },
+      }
     }),
     methods: {
-      onClickSelect(project) {
-        console.log('projectlist', project);
-        this.$emit('onClickSelect', project);
+      onClickItem(project) {
+        this.$store.commit('setSelectedProject', project);
       },
       onClickSubmit() {
         this.$store.dispatch('asyncSetProject', {title: this.title})
+        .then(response => console.log('res', response))
+        .then(() => this.$store.commit('setProjectCurrentType', this.pageType.RETRIEVE))
+        .then(() => this.$store.dispatch('asyncFindAllProject'))
+        .catch(err => console.error(err));
       },
     }
   }
