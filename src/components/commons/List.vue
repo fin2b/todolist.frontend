@@ -8,7 +8,7 @@
         <v-list-item-content>
           <v-list-item-title v-text="item.title"/>
         </v-list-item-content>
-        <v-checkbox v-model="selected" :value="item.title">
+        <v-checkbox v-model="selected" :value="i">
         </v-checkbox>
       </v-list-item>
     </div>

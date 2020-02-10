@@ -1,6 +1,6 @@
 <template>
   <div class="todo">
-    <List :items="todos" :on-click-item="onClickItem" :checkbox="true"/>
+    <List :items="storedTodoList" :on-click-item="onClickItem" :checkbox="true"/>
     <div class="todo-list-create" v-if="storedTodoCurrentType === pageType.CREATE">
       <v-list-item>
         <v-list-item-icon>
@@ -38,18 +38,15 @@
     computed: {
       ...mapGetters({
         storedCurrentProject: 'getCurrentProject',
-        storedTodoList: 'getTodos',
+        storedTodoList: 'getTodoList',
         storedTodoCurrentType: 'getTodoCurrentType',
-        storedTodo: 'getTodo',
+        storedCurrentTodo: 'getCurrentTodo',
       }),
     },
-    updated() {
-      console.log(this.storedCurrentProject.id);
-      this.$store.dispatch('asyncFindAllTodo', {projectId: this.storedCurrentProject.id});
-      this.todos = this.storedTodoList;
+    created() {
+      console.log(this.storedTodoList)
     },
     data: () => ({
-      todos: [],
       todo: {},
       pageType: {
         RETRIEVE: '조회하기',
@@ -66,7 +63,7 @@
         if (this.storedTodoCurrentType !== this.pageType.RETRIEVE) {
           this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
         }
-        this.$store.commit('setTodo', todo);
+        this.$store.commit('setCurrentTodo', todo);
       },
       onClickCancel() {
         this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
@@ -77,12 +74,12 @@
           title: this.title,
           projectId: this.storedCurrentProject.id
         };
-        this.$store.dispatch('asyncSetTodo', this.todo)
-          .then(response => this.$store.dispatch('asyncFindAllTodo', {projectId: this.storedCurrentProject.id}))
-          .then(() => this.$store.commit('setTodo', this.storedTodoList[this.storedTodoList.length - 1]))
+        this.$store.dispatch('createTodo', this.todo)
+          .then(response => this.$store.dispatch('findAllTodo', {projectId: this.storedCurrentProject.id}))
+          .then(() => this.$store.commit('setCurrentTodo', this.storedTodoList[this.storedTodoList.length - 1]))
           .then(() => {
             this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
-            console.log('current todo',  this.storedTodo);
+            console.log('current todo',  this.storedCurrentTodo);
           })
           .catch(console.error)
       }

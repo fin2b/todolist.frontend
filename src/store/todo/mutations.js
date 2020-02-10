@@ -2,7 +2,7 @@ export default {
   setTodoList(state, payload) {
     state.todo = payload;
   },
-  setTodo(state, idx, payload) {
+  setCurrentTodo(state, idx, payload) {
     state.todo[idx] = payload;
   },
   setTodoCurrentType(state, payload) {

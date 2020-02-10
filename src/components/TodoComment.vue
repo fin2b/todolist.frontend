@@ -17,11 +17,11 @@
   export default {
     computed: {
       ...mapGetters({
-        storedTodo: 'getTodo',
+        storedCurrentTodo: 'getCurrentTodo',
       }),
     },
     created() {
-      this.comments = this.storedTodo.comments ? this.storedTodo.comments : '';
+      this.comments = this.storedCurrentTodo.comments ? this.storedCurrentTodo.comments : '';
     },
     data: () => ({
       profileImg,

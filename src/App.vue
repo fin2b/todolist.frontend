@@ -6,7 +6,7 @@
       <ProjectList :projects="storedProjects" />
     </Dialog>
     <Dialog v-if="storedProjectCurrentType === this.pageType.CREATE" @on-close="!!!initDialog" :title="title"
-            :btn="btnWhenCreate" :onClickBtn="onClickBtnWhenCreate">
+            :btn="createBtn" :onClickBtn="onClickCreateBtn">
       <ProjectList :projects="storedProjects"/>
     </Dialog>
   </v-app>
@@ -41,13 +41,13 @@
       },
       btn: ['select', 'create'],
       onClickBtn: [],
-      btnWhenCreate: ['cancel'],
-      onClickBtnWhenCreate: [],
+      createBtn: ['cancel'],
+      onClickCreateBtn: [],
     }),
     created() {
       if (!this.storedCurrentProjectTitle) this.initDialog = true;
       this.onClickBtn.push(this.onSelectProject, this.onCreate);
-      this.onClickBtnWhenCreate.push(this.onCancel);
+      this.onClickCreateBtn.push(this.onCancel);
       this.$store.dispatch('asyncFindAllProject');
     },
     methods: {
@@ -57,6 +57,7 @@
       onSelectProject() {
         this.$router.push({name: 'home', params: {id: this.storedSelectedProject.id}})
           .then(() => this.$store.commit('setCurrentProject', this.storedSelectedProject))
+          .then(() => this.$store.dispatch('findAllTodo', this.storedSelectedProject.id))
           .then(() => this.initDialog = false)
           .catch(err => {
             if (err.name === "NavigationDuplicated")

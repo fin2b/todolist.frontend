@@ -4,7 +4,7 @@
       <v-col cols="12" sm="11">
         <div v-if="storedTodoCurrentType === pageType.RETRIEVE || storedTodoCurrentType === pageType.DELETE">
           <div class="description">
-            {{storedTodo.description}}
+            {{storedCurrentTodo.description}}
           </div>
         </div>
         <div v-else-if="storedTodoCurrentType === pageType.UPDATE">
@@ -12,7 +12,7 @@
             <v-icon class="edit-icon">{{icons.mdiFileEditOutline}}</v-icon>
             editing...
           </div>
-          <textarea type="text" id="description" class="edit-description" :value="storedTodo.description"
+          <textarea type="text" id="description" class="edit-description" :value="storedCurrentTodo.description"
                     @input="onInput" rows="15"/>
           <v-btn type="submit" class="edit-btn" color="primary" @click.prevent="onSubmit">수정</v-btn>
         </div>
@@ -22,12 +22,12 @@
         </div>
       </v-col>
       <v-col cols="12" sm="1">
-        <MenuBtn :item="storedTodo" :elems="pageType" :onClick="onClick"/>
+        <MenuBtn :item="storedCurrentTodo" :elems="pageType" :onClick="onClick"/>
       </v-col>
-      <Dialog v-if="storedTodoCurrentType === pageType.DELETE" :options="deleteOptions">
+      <Dialog v-if="storedTodoCurrentType === pageType.DELETE" :onClickBtn="onClickDeleteBtn" btn="deleteBtn">
         삭제하시겠습니까?
       </Dialog>
-      <Dialog v-if="confirmed" :options="confirmOptions">
+      <Dialog v-if="confirmed" :options="confirmOptions" :onClickBtn="onClickConfirmBtn" btn="confirmBtn">
         삭제되었습니다.
       </Dialog>
     </v-row>
@@ -46,15 +46,14 @@
     },
     computed: {
       ...mapGetters({
-        storedTodo: 'getTodo',
+        storedCurrentTodo: 'getCurrentTodo',
         storedTodoCurrentType: 'getTodoCurrentType',
         storedTodoTitle: 'getTodoTitle',
       }),
     },
     created() {
-      this.deleteOptions.onCancel = this.onDeleteCancel;
-      this.deleteOptions.onConfirm = this.onDeleteConfirm;
-      this.confirmOptions.onClose = this.onConfirmClose;
+      this.onClickDeleteBtn.push(this.onDeleteConfirm, this.onDeleteCancel);
+      this.onClickConfirmBtn.push(this.onConfirmClose);
     },
     data: () => ({
       pageType: {
@@ -67,17 +66,11 @@
         mdiFileEditOutline,
       },
       initDialog: false,
-      deleteOptions: {
-        isShowConfirm: true,
-        isShowCancel: true,
-        onConfirm: Function,
-        onCancel: Function,
-      },
+      deleteBtn: ['confirm', 'cancel'],
+      onClickDeleteBtn: [],
+      confirmBtn: ['confirm'],
+      onClickConfirmBtn: [],
       confirmed: false,
-      confirmOptions: {
-        isShowClose: true,
-        onClose: Function,
-      }
     }),
     methods: {
       onClick(el) {
@@ -87,24 +80,19 @@
         this.description = e.target.value;
       },
       onSubmit(e) {
-        console.log('description', this.description);
         this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
       },
       onDeleteCancel() {
-        console.log('cancel');
         this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
       },
       onDeleteConfirm() {
-        console.log('confirm');
         this.confirmed = true;
       },
       onConfirmClose() {
-        console.log('confirm dialog close');
         this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
         this.confirmed = false;
       },
       onClickCreate() {
-        console.log('create');
         this.$store.dispatch('asyncSetTodo',
           {title: this.storedTodoTitle, description: this.description});
         this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);

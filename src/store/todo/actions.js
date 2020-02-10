@@ -1,16 +1,17 @@
 import http from '../../util/http';
 
 export default {
-  asyncFindAllTodo(context, payload) {
-    http.get(`/todo/${payload.projectId}`)
+  findAllTodo(context, payload) {
+    return http.get(`/todo/${payload}`)
       .then(response => response.data)
       .then(response => {
-        context.commit('setTodos', response);
+        console.log('response', response);
+        context.commit('setTodoList', response);
         return response;
       }).catch(err => console.error(err));
   },
-  asyncSetTodo(context, payload) {
-    http.post('/todo', payload)
+  createTodo(context, payload) {
+    return http.post('/todo', payload)
       .then(response => {
         if (response.status === 200) {
           return response.data;
@@ -19,5 +20,16 @@ export default {
           throw new Error('Internal Error');
         }
       }).catch(err => console.error(err));
+  },
+  updateTodo(context, payload) {
+    return http.put('/todo', payload)
+      .then(response => response.data)
+      .then(response => {
+        context.commit('setTodo', response);
+        return response;
+      }).catch(err => console.error(err));
+  },
+  deleteTodo(context, payload) {
+    return http.delete('/todo', payload)
   }
 };

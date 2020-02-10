@@ -4,6 +4,7 @@ import mutations from './mutations';
 
 const state = {
   todo: [],
+  currentTodo: {},
   currentType: '조회하기'
 };
 
