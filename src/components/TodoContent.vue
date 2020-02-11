@@ -14,20 +14,20 @@
           </div>
           <textarea type="text" id="description" class="edit-description" :value="storedCurrentTodo.description"
                     @input="onInput" rows="15"/>
-          <v-btn type="submit" class="edit-btn" color="primary" @click.prevent="onSubmit">수정</v-btn>
+          <v-btn type="submit" class="edit-btn" color="primary" @click.prevent="onClickSubmit">수정</v-btn>
         </div>
         <div v-else-if="storedTodoCurrentType === pageType.CREATE">
           <textarea id="create-description" class="create-description" cols="30" rows="15"/>
-          <v-btn color="primary" @click="onClickCreate">할 일 등록</v-btn>
+          <v-btn color="primary" @click.prevent="onClickSubmit">할 일 등록</v-btn>
         </div>
       </v-col>
       <v-col cols="12" sm="1">
         <MenuBtn :item="storedCurrentTodo" :elems="pageType" :onClick="onClick"/>
       </v-col>
-      <Dialog v-if="storedTodoCurrentType === pageType.DELETE" :onClickBtn="onClickDeleteBtn" btn="deleteBtn">
+      <Dialog v-if="storedTodoCurrentType === pageType.DELETE" :onClickBtn="onClickDeleteBtn" :btn="deleteBtn">
         삭제하시겠습니까?
       </Dialog>
-      <Dialog v-if="confirmed" :options="confirmOptions" :onClickBtn="onClickConfirmBtn" btn="confirmBtn">
+      <Dialog v-if="storedTodoCurrentType === pageType.CONFIRM" :onClickBtn="onClickConfirmBtn" :btn="confirmBtn">
         삭제되었습니다.
       </Dialog>
     </v-row>
@@ -46,6 +46,7 @@
     },
     computed: {
       ...mapGetters({
+        storedCurrentProject: 'getCurrentProject',
         storedCurrentTodo: 'getCurrentTodo',
         storedTodoCurrentType: 'getTodoCurrentType',
         storedTodoTitle: 'getTodoTitle',
@@ -54,6 +55,7 @@
     created() {
       this.onClickDeleteBtn.push(this.onDeleteConfirm, this.onDeleteCancel);
       this.onClickConfirmBtn.push(this.onConfirmClose);
+      this.description = this.storedCurrentTodo.description;
     },
     data: () => ({
       pageType: {
@@ -61,16 +63,17 @@
         UPDATE: '수정하기',
         DELETE: '삭제하기',
         CREATE: '새로 만들기',
+        CONFIRM: '확인하기'
       },
       icons: {
         mdiFileEditOutline,
       },
+      description: '',
       initDialog: false,
       deleteBtn: ['confirm', 'cancel'],
       onClickDeleteBtn: [],
       confirmBtn: ['confirm'],
       onClickConfirmBtn: [],
-      confirmed: false,
     }),
     methods: {
       onClick(el) {
@@ -79,23 +82,26 @@
       onInput(e) {
         this.description = e.target.value;
       },
-      onSubmit(e) {
-        this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
-      },
       onDeleteCancel() {
         this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
       },
       onDeleteConfirm() {
-        this.confirmed = true;
+        console.log('currentTodo', this.storedCurrentTodo);
+        this.$store.dispatch('deleteTodo', this.storedCurrentTodo)
+          .then(() => this.$store.commit('setTodoCurrentType', this.pageType.CONFIRM))
       },
       onConfirmClose() {
-        this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
-        this.confirmed = false;
+        this.$store.dispatch('findAllTodo', this.storedCurrentProject.id)
+        .then(() => this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE));
       },
-      onClickCreate() {
-        this.$store.dispatch('asyncSetTodo',
-          {title: this.storedTodoTitle, description: this.description});
-        this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
+      onClickSubmit() {
+        console.log(this.description);
+        this.$store.dispatch('updateTodo', {
+          todoId: this.storedCurrentTodo.id,
+          description: this.description}
+        ).then(() => this.$store.dispatch('findAllTodo', this.storedCurrentProject.id))
+        .then(() => this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE))
+        .catch(err => console.error(err));
       }
     },
   }

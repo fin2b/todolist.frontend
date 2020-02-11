@@ -43,9 +43,6 @@
         storedCurrentTodo: 'getCurrentTodo',
       }),
     },
-    created() {
-      console.log(this.storedTodoList)
-    },
     data: () => ({
       todo: {},
       pageType: {
@@ -66,22 +63,19 @@
         this.$store.commit('setCurrentTodo', todo);
       },
       onClickCancel() {
+        this.title = '';
         this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
       },
       onClickSubmit() {
-        console.log('create title', this.title);
         this.todo = {
           title: this.title,
           projectId: this.storedCurrentProject.id
         };
         this.$store.dispatch('createTodo', this.todo)
-          .then(response => this.$store.dispatch('findAllTodo', {projectId: this.storedCurrentProject.id}))
+          .then(() => this.$store.dispatch('findAllTodo', this.storedCurrentProject.id))
           .then(() => this.$store.commit('setCurrentTodo', this.storedTodoList[this.storedTodoList.length - 1]))
-          .then(() => {
-            this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE);
-            console.log('current todo',  this.storedCurrentTodo);
-          })
-          .catch(console.error)
+          .then(() => this.$store.commit('setTodoCurrentType', this.pageType.RETRIEVE))
+          .catch(err => console.error(err));
       }
     }
   }

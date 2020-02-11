@@ -25,11 +25,17 @@ export default {
     return http.put('/todo', payload)
       .then(response => response.data)
       .then(response => {
-        context.commit('setTodo', response);
+        context.commit('setCurrentTodo', response);
         return response;
       }).catch(err => console.error(err));
   },
   deleteTodo(context, payload) {
-    return http.delete('/todo', payload)
+    return http.delete(`/todo`, {data: payload})
+      .then(response => {
+        console.log('payload', payload);
+        if (response.state === 200) {
+          return response;
+        }
+      }).catch(err => console.error(err));
   }
 };
